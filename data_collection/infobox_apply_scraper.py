@@ -6,7 +6,7 @@ import requests
 
 # access the api
 url = "https://coppermind.net/w/api.php"
-name = "Vin"
+name = "Category:Characters"
 sazed_dict = {"Name": name}
 
 scraper(url, name, sazed_dict)
