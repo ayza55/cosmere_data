@@ -23,8 +23,9 @@ class CharacterScraper(Scraper):
     """
     Returns text representation of character
     """
-    def scrape(self, request, **kwargs):
+    def scrape(self, page:str):
         characters = []
+        request = CharacterScraper.get_request(page)
         data = request.json()
         for member in data["query"]["categorymembers"]:
             title = (member["title"])
@@ -33,10 +34,6 @@ class CharacterScraper(Scraper):
         return characters
 
 
-charscraper = CharacterScraper()
-req = charscraper.get_request("Category:Nalthians")
-characters = charscraper.scrape(req)
-print(characters)
 
 
 

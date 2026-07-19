@@ -6,11 +6,13 @@ class InfoboxScraper(Scraper):
 
     """
     Returns text representation of character
-    """
-    def scrape(self, request, **kwargs):
-        character = kwargs.get("character")
-        character_base = {"Name" : character}
 
+    page: the name of the character
+    """
+    def scrape(self, page:str):
+        character_base = {"Name" : page}
+
+        request = Scraper.get_request(page)
         infobox = request.find("table")
         if infobox:
             rows = infobox.find_all("tr")

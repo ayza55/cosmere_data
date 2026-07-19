@@ -23,8 +23,9 @@ class Scraper:
     """
     Return text representation of the request
     """
-    def scrape(self, request, **kwargs):
-        return request.getText
+    def scrape(self, page: str):
+        request = Scraper.get_request(page)
+        return request.text
 
 
 

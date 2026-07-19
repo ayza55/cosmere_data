@@ -1,11 +1,11 @@
 from characters_scraper import CharacterScraper
 from infobox_scraper import InfoboxScraper
+import json
 
 charscraper = CharacterScraper()
-req = charscraper.get_request("Category:Nalthians")
-characters = charscraper.scrape(req)
+characters = charscraper.scrape("Category:Nalthians")
 
 infoscraper = InfoboxScraper()
 
-info = infoscraper.scrape(infoscraper.get_request(characters[0],), character = characters[0])
+info = infoscraper.scrape(characters[0])
 print(info)
