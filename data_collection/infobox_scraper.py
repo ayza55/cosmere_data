@@ -25,7 +25,7 @@ class InfoboxScraper(Scraper):
                     key = cells[0].get_text().strip()
                     value = cells[1].get_text().strip()
                     character_base[key] = value
-        return str(character_base)
+        return character_base
 
 
 
