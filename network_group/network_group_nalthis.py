@@ -8,14 +8,18 @@ from pathlib import Path
 
 # get path to the data
 dir_parent = Path(__file__).parent
-file_path = dir_parent.parent / "data_collection" / "characters_data.json"
+file_path_nalthis = dir_parent.parent / "data_collection" / "characters_data.json"
 
 
 class GroupNetwork(NetworkBase):
+
+    def __init__(self):
+        super().__init__()
+
     """
     returns a list of dictionaries representing individual characters
     """
-    def retrieve_data(self):
+    def retrieve_data(self, file_path):
         with open(file_path, 'r') as file:
             characters = json.load(file)
             print(type(characters))
@@ -24,27 +28,53 @@ class GroupNetwork(NetworkBase):
         return characters
 
     # function to get list of groups, dict {group: list of members}
-    def make_groups(self, characters : list[dict]) -> list[dict]:
-        groups = [] # list of dicts
+    """
+    Returns a list of group names that the characters belong to.
+    """
+    def make_groups(self, characters : list[dict]) -> list[str]:
         group_names = [] # list of group names (strings) for reference
 
         for character in characters:
-            group = character.get("Groups")
-            if group:
-                if group_names.count(group) == 0:
-                    groups.append({group: [character.get("Name")]})
-                    group_names.append(group)
-                else:
-                    existing_group = [group for x in groups if x.keys() == [group]]
-                    existing_group[0][group].append(character.get("Name"))
-        return groups
+            groups = character.get("Groups")
 
+            if groups:
+                for group in groups:
+                    if group_names.count(group) == 0:
+                        group_names.append(group)
+        return group_names
 
-
-    # function to add group nodes
+    """
+    Creates and adds a node for each group.
+    """
+    def add_group_nodes(self, group_names:list[str]):
+        self.network.add_nodes(group_names)
 
     # function to add character nodes
+    """
+    Creates and adds a node for each character, as well as edges linking the character to 
+    any group they are a part of.
+    """
+    def add_character_nodes(self, characters: list[dict]):
+        # add character node
+        for character in characters:
+            self.network.add_node(character["Name"])
+            groups = character.get("Groups")
+            if groups:
+                for group in groups:
+                    self.network.add_edge(group, character["Name"])
+
+    """
+    Creates the network from character data
+    """
+    def create_network(self, file_path, filename):
+        characters = self.retrieve_data(file_path)
+        groups = self.make_groups(characters)
+        self.add_group_nodes(groups)
+        self.add_character_nodes(characters)
+        self.show_network(filename)
+
+
 
 nw = GroupNetwork()
-chars = nw.retrieve_data()
-print(nw.make_groups(chars))
+nw.create_network(file_path_nalthis, "nalthis_network_B.html")
+

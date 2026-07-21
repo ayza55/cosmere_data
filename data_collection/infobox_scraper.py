@@ -24,6 +24,8 @@ class InfoboxScraper(Scraper):
                 elif len(cells) == 2:
                     key = cells[0].get_text().strip()
                     value = cells[1].get_text().strip()
+                    # make into list
+                    value = value.split(",")
                     character_base[key] = value
         return character_base
 
