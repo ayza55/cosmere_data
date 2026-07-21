@@ -44,10 +44,28 @@ class GroupNetwork(NetworkBase):
         return group_names
 
     """
+    Returns a list of group names that the characters belong to.
+    """
+    def make_abilities(self, characters : list[dict]) -> list[str]:
+        group_names = [] # list of group names (strings) for reference
+
+        for character in characters:
+            groups = character.get("Abilities")
+
+            if groups:
+                for group in groups:
+                    if group_names.count(group) == 0:
+                        group_names.append(group)
+        return group_names
+
+    """
     Creates and adds a node for each group.
     """
     def add_group_nodes(self, group_names:list[str]):
-        self.network.add_nodes(group_names)
+        self.network.add_nodes(group_names, color = ['red']*len(group_names))
+
+    def add_ability_nodes(self, ability_names:list[str]):
+        self.network.add_nodes(ability_names, color = ['red']*len(ability_names))
 
     # function to add character nodes
     """
@@ -58,10 +76,16 @@ class GroupNetwork(NetworkBase):
         # add character node
         for character in characters:
             self.network.add_node(character["Name"])
+
             groups = character.get("Groups")
             if groups:
                 for group in groups:
                     self.network.add_edge(group, character["Name"])
+
+            abilities = character.get("Abilities")
+            if abilities:
+                for ability in abilities:
+                    self.network.add_edge(ability, character["Name"])
 
     """
     Creates the network from character data
@@ -69,6 +93,8 @@ class GroupNetwork(NetworkBase):
     def create_network(self, file_path, filename):
         characters = self.retrieve_data(file_path)
         groups = self.make_groups(characters)
+        abilities = self.make_abilities(characters)
+        self.add_ability_nodes(abilities)
         self.add_group_nodes(groups)
         self.add_character_nodes(characters)
         self.show_network(filename)
