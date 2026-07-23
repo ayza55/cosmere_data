@@ -1,7 +1,5 @@
-from pyvis.network import Network
-
 import json
-from network_base import NetworkBase
+from general_network.network_base import NetworkBase
 from pathlib import Path
 
 # INDIVIDUAL_CHARS_FILENAME = "data_collection/characters_data.json"
@@ -73,6 +71,7 @@ class GroupNetwork(NetworkBase):
 
             for category in categories:
                 self._add_links(character, category)
+
 
     """
     Creates the network from character data

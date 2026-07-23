@@ -1,13 +1,12 @@
-from bs4 import BeautifulSoup
 import requests
-from scraper import Scraper
+from general_network.scraper import Scraper
 
 EXCLUDE = "Category"
 
 class CharacterScraper(Scraper):
 
     @staticmethod
-    def get_request(page: str):
+    def _get_request(page: str):
         params = {
             "action": "query",
             "list": "categorymembers",
@@ -25,7 +24,7 @@ class CharacterScraper(Scraper):
     """
     def scrape(self, page:str):
         characters = []
-        request = CharacterScraper.get_request(page)
+        request = CharacterScraper._get_request(page)
         data = request.json()
         for member in data["query"]["categorymembers"]:
             title = (member["title"])

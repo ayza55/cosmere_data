@@ -17,7 +17,11 @@ class NetworkBase:
     Requires data is not null.
     """
     def add_to_network(self, data:list, colour : str):
-        self.network.add_nodes(data, color = [colour] * len(data))
+        if colour:
+            self.network.add_nodes(data, color = [colour] * len(data))
+        else:
+            self.network.add_nodes(data)
+
 
     """
     creates html file with filename to show the network

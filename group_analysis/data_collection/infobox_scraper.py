@@ -1,6 +1,4 @@
-
-from bs4 import BeautifulSoup
-from scraper import Scraper
+from general_network.scraper import Scraper
 
 class InfoboxScraper(Scraper):
     REMOVE = ["(", "[" ]
@@ -13,7 +11,7 @@ class InfoboxScraper(Scraper):
     def scrape(self, page:str):
         character_base = {"Name" : page}
 
-        request = Scraper.get_request(page)
+        request = Scraper._get_request(page)
         infobox = request.find("table")
         if infobox:
             rows = infobox.find_all("tr")
@@ -27,23 +25,11 @@ class InfoboxScraper(Scraper):
                     value = cells[1].get_text().strip()
 
                     # make into list
-                    value = self.clean_data(value.split(","))
+                    value = Scraper.clean_data(value.split(","))
                     character_base[key] = value
         return character_base
 
-    """
-    data is a list of strings.
-    """
-    def clean_data(self, data) -> list[str]:
-        clean_data = []
-        for entry in data:
-            entry = entry.strip()
-            for i in range(0, len(self.REMOVE)):
-                index = entry.find(self.REMOVE[i])
-                if index != -1:
-                    entry = entry[:index]
-            clean_data.append(entry.strip())
-        return clean_data
+
 
 
 
