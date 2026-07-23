@@ -1,0 +1,166 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "Vasher", "label": "Vasher", "shape": "dot"}, {"color": "#97c2fc", "id": "Nightblood", "label": "Nightblood", "shape": "dot"}, {"color": "#97c2fc", "id": "Vahr", "label": "Vahr", "shape": "dot"}, {"color": "#97c2fc", "id": "Susebron", "label": "Susebron", "shape": "dot"}, {"color": "#97c2fc", "id": "Sisirinah", "label": "Sisirinah", "shape": "dot"}, {"color": "#97c2fc", "id": "Dedelin", "label": "Dedelin", "shape": "dot"}, {"color": "#97c2fc", "id": "Mab", "label": "Mab", "shape": "dot"}, {"color": "#97c2fc", "id": "Yarda", "label": "Yarda", "shape": "dot"}, {"color": "#97c2fc", "id": "Vivenna", "label": "Vivenna", "shape": "dot"}, {"color": "#97c2fc", "id": "Fafen", "label": "Fafen", "shape": "dot"}, {"color": "#97c2fc", "id": "Ridger", "label": "Ridger", "shape": "dot"}, {"color": "#97c2fc", "id": "Lightsong", "label": "Lightsong", "shape": "dot"}, {"color": "#97c2fc", "id": "Llarimar", "label": "Llarimar", "shape": "dot"}, {"color": "#97c2fc", "id": "Treledees", "label": "Treledees", "shape": "dot"}, {"color": "#97c2fc", "id": "Bebid", "label": "Bebid", "shape": "dot"}, {"color": "#97c2fc", "id": "Brightvision", "label": "Brightvision", "shape": "dot"}, {"color": "#97c2fc", "id": "Mercystar", "label": "Mercystar", "shape": "dot"}, {"color": "#97c2fc", "id": "Havarseth", "label": "Havarseth", "shape": "dot"}, {"color": "#97c2fc", "id": "Jlan", "label": "Jlan", "shape": "dot"}, {"color": "#97c2fc", "id": "Blushweaver", "label": "Blushweaver", "shape": "dot"}, {"color": "#97c2fc", "id": "Inhanna", "label": "Inhanna", "shape": "dot"}, {"color": "#97c2fc", "id": "Calmseer", "label": "Calmseer", "shape": "dot"}, {"color": "#97c2fc", "id": "Kalad", "label": "Kalad", "shape": "dot"}, {"color": "#97c2fc", "id": "Parlin", "label": "Parlin", "shape": "dot"}, {"color": "#97c2fc", "id": "Denth", "label": "Denth", "shape": "dot"}, {"color": "#97c2fc", "id": "Tonk Fah", "label": "Tonk Fah", "shape": "dot"}, {"color": "#97c2fc", "id": "Lemex", "label": "Lemex", "shape": "dot"}, {"color": "#97c2fc", "id": "Lemex\u0027s nurse", "label": "Lemex\u0027s nurse", "shape": "dot"}, {"color": "#97c2fc", "id": "Halan", "label": "Halan", "shape": "dot"}, {"color": "#97c2fc", "id": "Brighthue", "label": "Brighthue", "shape": "dot"}, {"color": "#97c2fc", "id": "Jewels", "label": "Jewels", "shape": "dot"}, {"color": "#97c2fc", "id": "Peacegiver", "label": "Peacegiver", "shape": "dot"}, {"color": "#97c2fc", "id": "Nanrovah", "label": "Nanrovah", "shape": "dot"}, {"color": "#97c2fc", "id": "Mirthgiver", "label": "Mirthgiver", "shape": "dot"}, {"color": "#97c2fc", "id": "Clod", "label": "Clod", "shape": "dot"}, {"color": "#97c2fc", "id": "Stillmark", "label": "Stillmark", "shape": "dot"}, {"color": "#97c2fc", "id": "Giftbeacon", "label": "Giftbeacon", "shape": "dot"}, {"color": "#97c2fc", "id": "Peaceyearning", "label": "Peaceyearning", "shape": "dot"}, {"color": "#97c2fc", "id": "Weatherlove", "label": "Weatherlove", "shape": "dot"}, {"color": "#97c2fc", "id": "Truthcall", "label": "Truthcall", "shape": "dot"}, {"color": "#97c2fc", "id": "Lifeblesser", "label": "Lifeblesser", "shape": "dot"}, {"color": "#97c2fc", "id": "Fob", "label": "Fob", "shape": "dot"}, {"color": "#97c2fc", "id": "Grable", "label": "Grable", "shape": "dot"}, {"color": "#97c2fc", "id": "Thame", "label": "Thame", "shape": "dot"}, {"color": "#97c2fc", "id": "Susebron\u0027s mother", "label": "Susebron\u0027s mother", "shape": "dot"}, {"color": "#97c2fc", "id": "Gagaril", "label": "Gagaril", "shape": "dot"}, {"color": "#97c2fc", "id": "Fran", "label": "Fran", "shape": "dot"}, {"color": "#97c2fc", "id": "Lolan", "label": "Lolan", "shape": "dot"}, {"color": "#97c2fc", "id": "Rariv", "label": "Rariv", "shape": "dot"}, {"color": "#97c2fc", "id": "Taff", "label": "Taff", "shape": "dot"}, {"color": "#97c2fc", "id": "Allmother", "label": "Allmother", "shape": "dot"}, {"color": "#97c2fc", "id": "Shashara", "label": "Shashara", "shape": "dot"}, {"color": "#97c2fc", "id": "Hopefinder", "label": "Hopefinder", "shape": "dot"}, {"color": "#97c2fc", "id": "Paxen", "label": "Paxen", "shape": "dot"}, {"color": "#97c2fc", "id": "Ashu", "label": "Ashu", "shape": "dot"}, {"color": "#97c2fc", "id": "Rira", "label": "Rira", "shape": "dot"}, {"color": "#97c2fc", "id": "Hoid", "label": "Hoid", "shape": "dot"}, {"color": "#97c2fc", "id": "Vo", "label": "Vo", "shape": "dot"}, {"color": "#97c2fc", "id": "Cads", "label": "Cads", "shape": "dot"}, {"color": "#97c2fc", "id": "Misel", "label": "Misel", "shape": "dot"}, {"color": "#97c2fc", "id": "Old Chapps", "label": "Old Chapps", "shape": "dot"}, {"color": "#97c2fc", "id": "Arsteel", "label": "Arsteel", "shape": "dot"}, {"color": "#97c2fc", "id": "Tuft", "label": "Tuft", "shape": "dot"}, {"color": "#97c2fc", "id": "Gendren", "label": "Gendren", "shape": "dot"}, {"color": "#97c2fc", "id": "Kindwinds", "label": "Kindwinds", "shape": "dot"}, {"color": "#97c2fc", "id": "Yesteel", "label": "Yesteel", "shape": "dot"}, {"color": "#97c2fc", "id": "Tatara", "label": "Tatara", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"from": "Vasher", "to": "Nightblood"}, {"from": "Vasher", "to": "Vahr"}, {"from": "Vasher", "to": "Susebron"}, {"from": "Vasher", "to": "Sisirinah"}, {"from": "Vasher", "to": "Vivenna"}, {"from": "Vasher", "to": "Lightsong"}, {"from": "Vasher", "to": "Llarimar"}, {"from": "Vasher", "to": "Treledees"}, {"from": "Vasher", "to": "Mercystar"}, {"from": "Vasher", "to": "Havarseth"}, {"from": "Vasher", "to": "Blushweaver"}, {"from": "Vasher", "to": "Parlin"}, {"from": "Vasher", "to": "Denth"}, {"from": "Vasher", "to": "Tonk Fah"}, {"from": "Vasher", "to": "Lemex"}, {"from": "Vasher", "to": "Jewels"}, {"from": "Vasher", "to": "Clod"}, {"from": "Vasher", "to": "Shashara"}, {"from": "Vasher", "to": "Arsteel"}, {"from": "Nightblood", "to": "Vahr"}, {"from": "Nightblood", "to": "Susebron"}, {"from": "Nightblood", "to": "Sisirinah"}, {"from": "Nightblood", "to": "Vivenna"}, {"from": "Nightblood", "to": "Lightsong"}, {"from": "Nightblood", "to": "Llarimar"}, {"from": "Nightblood", "to": "Treledees"}, {"from": "Nightblood", "to": "Havarseth"}, {"from": "Nightblood", "to": "Blushweaver"}, {"from": "Nightblood", "to": "Parlin"}, {"from": "Nightblood", "to": "Denth"}, {"from": "Nightblood", "to": "Tonk Fah"}, {"from": "Nightblood", "to": "Lemex"}, {"from": "Nightblood", "to": "Jewels"}, {"from": "Nightblood", "to": "Shashara"}, {"from": "Nightblood", "to": "Arsteel"}, {"from": "Vahr", "to": "Susebron"}, {"from": "Vahr", "to": "Sisirinah"}, {"from": "Vahr", "to": "Vivenna"}, {"from": "Vahr", "to": "Parlin"}, {"from": "Vahr", "to": "Denth"}, {"from": "Vahr", "to": "Tonk Fah"}, {"from": "Vahr", "to": "Jewels"}, {"from": "Susebron", "to": "Sisirinah"}, {"from": "Susebron", "to": "Dedelin"}, {"from": "Susebron", "to": "Vivenna"}, {"from": "Susebron", "to": "Lightsong"}, {"from": "Susebron", "to": "Llarimar"}, {"from": "Susebron", "to": "Treledees"}, {"from": "Susebron", "to": "Mercystar"}, {"from": "Susebron", "to": "Havarseth"}, {"from": "Susebron", "to": "Blushweaver"}, {"from": "Susebron", "to": "Calmseer"}, {"from": "Susebron", "to": "Parlin"}, {"from": "Susebron", "to": "Denth"}, {"from": "Susebron", "to": "Tonk Fah"}, {"from": "Susebron", "to": "Lemex"}, {"from": "Susebron", "to": "Jewels"}, {"from": "Susebron", "to": "Allmother"}, {"from": "Susebron", "to": "Shashara"}, {"from": "Susebron", "to": "Hopefinder"}, {"from": "Susebron", "to": "Hoid"}, {"from": "Susebron", "to": "Arsteel"}, {"from": "Sisirinah", "to": "Dedelin"}, {"from": "Sisirinah", "to": "Yarda"}, {"from": "Sisirinah", "to": "Vivenna"}, {"from": "Sisirinah", "to": "Lightsong"}, {"from": "Sisirinah", "to": "Llarimar"}, {"from": "Sisirinah", "to": "Treledees"}, {"from": "Sisirinah", "to": "Mercystar"}, {"from": "Sisirinah", "to": "Havarseth"}, {"from": "Sisirinah", "to": "Blushweaver"}, {"from": "Sisirinah", "to": "Inhanna"}, {"from": "Sisirinah", "to": "Calmseer"}, {"from": "Sisirinah", "to": "Parlin"}, {"from": "Sisirinah", "to": "Denth"}, {"from": "Sisirinah", "to": "Tonk Fah"}, {"from": "Sisirinah", "to": "Lemex"}, {"from": "Sisirinah", "to": "Jewels"}, {"from": "Sisirinah", "to": "Nanrovah"}, {"from": "Sisirinah", "to": "Allmother"}, {"from": "Sisirinah", "to": "Shashara"}, {"from": "Sisirinah", "to": "Hoid"}, {"from": "Dedelin", "to": "Yarda"}, {"from": "Dedelin", "to": "Vivenna"}, {"from": "Dedelin", "to": "Parlin"}, {"from": "Dedelin", "to": "Denth"}, {"from": "Dedelin", "to": "Tonk Fah"}, {"from": "Dedelin", "to": "Lemex"}, {"from": "Dedelin", "to": "Jewels"}, {"from": "Yarda", "to": "Vivenna"}, {"from": "Vivenna", "to": "Lightsong"}, {"from": "Vivenna", "to": "Llarimar"}, {"from": "Vivenna", "to": "Treledees"}, {"from": "Vivenna", "to": "Havarseth"}, {"from": "Vivenna", "to": "Blushweaver"}, {"from": "Vivenna", "to": "Parlin"}, {"from": "Vivenna", "to": "Denth"}, {"from": "Vivenna", "to": "Tonk Fah"}, {"from": "Vivenna", "to": "Lemex"}, {"from": "Vivenna", "to": "Jewels"}, {"from": "Vivenna", "to": "Nanrovah"}, {"from": "Vivenna", "to": "Clod"}, {"from": "Vivenna", "to": "Thame"}, {"from": "Vivenna", "to": "Shashara"}, {"from": "Vivenna", "to": "Arsteel"}, {"from": "Lightsong", "to": "Llarimar"}, {"from": "Lightsong", "to": "Treledees"}, {"from": "Lightsong", "to": "Mercystar"}, {"from": "Lightsong", "to": "Havarseth"}, {"from": "Lightsong", "to": "Blushweaver"}, {"from": "Lightsong", "to": "Inhanna"}, {"from": "Lightsong", "to": "Calmseer"}, {"from": "Lightsong", "to": "Parlin"}, {"from": "Lightsong", "to": "Denth"}, {"from": "Lightsong", "to": "Tonk Fah"}, {"from": "Lightsong", "to": "Nanrovah"}, {"from": "Lightsong", "to": "Allmother"}, {"from": "Lightsong", "to": "Shashara"}, {"from": "Lightsong", "to": "Hopefinder"}, {"from": "Llarimar", "to": "Treledees"}, {"from": "Llarimar", "to": "Mercystar"}, {"from": "Llarimar", "to": "Havarseth"}, {"from": "Llarimar", "to": "Blushweaver"}, {"from": "Llarimar", "to": "Calmseer"}, {"from": "Llarimar", "to": "Denth"}, {"from": "Llarimar", "to": "Tonk Fah"}, {"from": "Llarimar", "to": "Allmother"}, {"from": "Treledees", "to": "Havarseth"}, {"from": "Treledees", "to": "Blushweaver"}, {"from": "Treledees", "to": "Denth"}, {"from": "Mercystar", "to": "Blushweaver"}, {"from": "Mercystar", "to": "Allmother"}, {"from": "Mercystar", "to": "Hopefinder"}, {"from": "Havarseth", "to": "Blushweaver"}, {"from": "Havarseth", "to": "Denth"}, {"from": "Blushweaver", "to": "Inhanna"}, {"from": "Blushweaver", "to": "Calmseer"}, {"from": "Blushweaver", "to": "Parlin"}, {"from": "Blushweaver", "to": "Denth"}, {"from": "Blushweaver", "to": "Tonk Fah"}, {"from": "Blushweaver", "to": "Nanrovah"}, {"from": "Blushweaver", "to": "Weatherlove"}, {"from": "Blushweaver", "to": "Allmother"}, {"from": "Blushweaver", "to": "Hopefinder"}, {"from": "Parlin", "to": "Denth"}, {"from": "Parlin", "to": "Tonk Fah"}, {"from": "Parlin", "to": "Lemex"}, {"from": "Parlin", "to": "Jewels"}, {"from": "Parlin", "to": "Clod"}, {"from": "Parlin", "to": "Thame"}, {"from": "Denth", "to": "Tonk Fah"}, {"from": "Denth", "to": "Lemex"}, {"from": "Denth", "to": "Jewels"}, {"from": "Denth", "to": "Clod"}, {"from": "Denth", "to": "Thame"}, {"from": "Denth", "to": "Shashara"}, {"from": "Denth", "to": "Arsteel"}, {"from": "Tonk Fah", "to": "Lemex"}, {"from": "Tonk Fah", "to": "Jewels"}, {"from": "Tonk Fah", "to": "Clod"}, {"from": "Tonk Fah", "to": "Thame"}, {"from": "Tonk Fah", "to": "Shashara"}, {"from": "Lemex", "to": "Jewels"}, {"from": "Lemex", "to": "Clod"}, {"from": "Jewels", "to": "Clod"}, {"from": "Jewels", "to": "Thame"}, {"from": "Clod", "to": "Thame"}, {"from": "Shashara", "to": "Arsteel"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "hoverWidth": 2.4,
+        "selectionWidth": 4.9,
+        "smooth": {
+            "enabled": true,
+            "forceDirection": "none",
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "barnesHut": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.3,
+            "damping": 0.09,
+            "gravitationalConstant": -10000,
+            "springConstant": 0.04,
+            "springLength": 250
+        },
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
