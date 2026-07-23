@@ -25,8 +25,6 @@ def get_chars(characters: list[str]) -> list[dict]:
 
 
 nalthians_characters = get_chars(characters)
-print(type(nalthians_characters))
-print(type(nalthians_characters[0]))
 with open(INDIVIDUAL_CHARS_FILENAME, "w") as characters_file:
 	json.dump(nalthians_characters, characters_file)
 

@@ -10,6 +10,9 @@ from pathlib import Path
 dir_parent = Path(__file__).parent
 file_path_nalthis = dir_parent.parent / "data_collection" / "characters_data.json"
 
+# link factors
+LINKS = ["Abilities", "Groups"]
+
 
 class GroupNetwork(NetworkBase):
 
@@ -27,76 +30,57 @@ class GroupNetwork(NetworkBase):
             print(type(characters[0]))
         return characters
 
-    # function to get list of groups, dict {group: list of members}
     """
-    Returns a list of group names that the characters belong to.
+    Returns list of specific categories from the main category provided.
     """
-    def make_groups(self, characters : list[dict]) -> list[str]:
-        group_names = [] # list of group names (strings) for reference
-
+    def _get_category_nodes(self, characters : list[dict], category : str) -> list[str]:
+        category_names = []
         for character in characters:
-            groups = character.get("Groups")
-
-            if groups:
-                for group in groups:
-                    if group_names.count(group) == 0:
-                        group_names.append(group)
-        return group_names
-
-    """
-    Returns a list of group names that the characters belong to.
-    """
-    def make_abilities(self, characters : list[dict]) -> list[str]:
-        group_names = [] # list of group names (strings) for reference
-
-        for character in characters:
-            groups = character.get("Abilities")
-
-            if groups:
-                for group in groups:
-                    if group_names.count(group) == 0:
-                        group_names.append(group)
-        return group_names
+            links = character.get(category)
+            if links:
+                for link in links:
+                    if category_names.count(link) == 0:
+                        category_names.append(link)
+        return category_names
 
     """
-    Creates and adds a node for each group.
+    From the main categories provided, finds and adds all subcategory nodes to the network.
     """
-    def add_group_nodes(self, group_names:list[str]):
-        self.network.add_nodes(group_names, color = ['red']*len(group_names))
+    def add_all_category_nodes(self, categories : list[str], characters : list[dict]):
+        for category in categories:
+            category_names = self._get_category_nodes(characters, category)
+            self.add_to_network(category_names, 'red')
 
-    def add_ability_nodes(self, ability_names:list[str]):
-        self.network.add_nodes(ability_names, color = ['red']*len(ability_names))
 
-    # function to add character nodes
+    """
+    Searches for the category in the character dictionary, and adds edges if found
+    Requires that the category results are already nodes in the system
+    """
+    def _add_links(self, character : dict, category : str):
+        links = character.get(category)
+        if links:
+            for link in links:
+                self.network.add_edge(link, character["Name"])
+
     """
     Creates and adds a node for each character, as well as edges linking the character to 
-    any group they are a part of.
+    any group they are a part of, for each given category
     """
-    def add_character_nodes(self, characters: list[dict]):
+    def _add_character_nodes(self, characters: list[dict], categories : list[str]):
         # add character node
         for character in characters:
             self.network.add_node(character["Name"])
 
-            groups = character.get("Groups")
-            if groups:
-                for group in groups:
-                    self.network.add_edge(group, character["Name"])
-
-            abilities = character.get("Abilities")
-            if abilities:
-                for ability in abilities:
-                    self.network.add_edge(ability, character["Name"])
+            for category in categories:
+                self._add_links(character, category)
 
     """
     Creates the network from character data
     """
     def create_network(self, file_path, filename):
         characters = self.retrieve_data(file_path)
-        groups = self.make_groups(characters)
-        abilities = self.make_abilities(characters)
-        self.add_ability_nodes(abilities)
-        self.add_group_nodes(groups)
-        self.add_character_nodes(characters)
+        self.add_all_category_nodes(LINKS, characters)
+        self._add_character_nodes(characters, LINKS)
         self.show_network(filename)
 
 

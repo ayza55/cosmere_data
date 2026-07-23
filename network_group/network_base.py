@@ -16,8 +16,8 @@ class NetworkBase:
     Requires data have unique entries, that are either strings or integers.
     Requires data is not null.
     """
-    def add_to_network(self, data:list):
-        self.network.add_nodes(data)
+    def add_to_network(self, data:list, colour : str):
+        self.network.add_nodes(data, color = [colour] * len(data))
 
     """
     creates html file with filename to show the network
