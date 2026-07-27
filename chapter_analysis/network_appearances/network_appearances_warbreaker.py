@@ -1,6 +1,8 @@
 from general_network.network_base import NetworkBase
 from chapter_analysis.warbreaker_appearance_data_cleanup import WarbreakerAppearanceData
 import numpy as np
+import matplotlib.pyplot as plt
+import networkx as nx
 
 class WarbreakerAppearanceNetwork(NetworkBase):
     THRESHOLD = 3
@@ -14,6 +16,7 @@ class WarbreakerAppearanceNetwork(NetworkBase):
 
         self.upper_row_index = len(self.character_list) - 1
         self.upper_col_index = len(self.character_list)
+
 
     """
     Determines the number of chapters both characters appear in together
@@ -41,14 +44,22 @@ class WarbreakerAppearanceNetwork(NetworkBase):
     """
     Adds the edges to the network based on the character appearance data. Currently adds edge 
     if characters appear together one or more times.
+    
+    if dynamic, adds edges to the network held by the instance and returns empty list
+    if static, returns the list of strings representing edge pairings.
     """
-    def create_edges(self):
+    def create_edges(self, dynamic : bool):
+        static_links = []
         self._parse_links()
         for i in range(self.upper_row_index):
             for j in range(i + 1, self.upper_col_index):
                 if self.links[i,j] >= self.THRESHOLD:
-                    self.network.add_edge(self.character_list[i],
+                    if dynamic:
+                        self.network.add_edge(self.character_list[i],
                                           self.character_list[j])
+                    else:
+                        static_links.append((self.character_list[i], self.character_list[j]))
+        return static_links
 
 
     """
@@ -79,6 +90,33 @@ class WarbreakerAppearanceNetwork(NetworkBase):
 
 
 
+
+
+
 ##############################################################################################
 wb_network = WarbreakerAppearanceNetwork()
-wb_network.create_network('warbreaker_appearance_network.html')
+# wb_network.create_network('warbreaker_appearance_network.html')
+
+# Initialize an undirected graph
+static_network = nx.Graph()
+
+# Add relationships (edges automatically create missing nodes)
+edges = wb_network.create_edges(dynamic=False)
+static_network.add_edges_from(edges)
+
+# Compute a layout to position the nodes
+pos = nx.spring_layout(static_network)
+
+# Render the layout using Matplotlib
+plt.figure(figsize=(10, 10))
+nx.draw(
+    static_network,
+    pos,
+    with_labels=True,
+    node_color="lightblue",
+    edge_color="gray",
+    node_size=200,
+)
+
+# Display the plot
+plt.show()
