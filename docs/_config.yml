@@ -1,9 +1,6 @@
-title: My Website
-description: My GitHub Pages site
-theme: jekyll-theme-minimal
-# Optional
-markdown: kramdown
+title:
+description: fun
 
-# Prevent Jekyll from processing certain folders
-exclude:
-  - README.md
+theme: minima
+
+markdown: kramdown
