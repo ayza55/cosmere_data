@@ -6,6 +6,7 @@ title: Cosmere Network
 ### This page may contain spoilers for : Warbreaker
 
 Initial attempts to create relationship networks between characters in Brandon Sanderson's **Cosmere** series.
+Updated: July 2026
 
 ## Projects
 <html>
