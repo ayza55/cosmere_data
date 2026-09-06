@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
-REMOVE = ["(", "[" ]
+REMOVE = ["(", "[", " (" ]
 
 class Scraper:
     url = "https://coppermind.net/w/api.php"

@@ -28,5 +28,8 @@ class CharacterFreqScraper(Scraper):
 
 ##################################################################################################
 test = CharacterFreqScraper()
-test.search_and_save("Summary:Warbreaker", "character_freq_data_Warbreaker.json")
-test.save_general_data("Summary:Warbreaker", "character_freq_data_general_Warbreaker.json")
+# test.search_and_save("Summary:Warbreaker", "character_freq_data_Warbreaker.json")
+# test.save_general_data("Summary:Warbreaker", "character_freq_data_general_Warbreaker.json")
+
+test.search_and_save("Summary:Mistborn: The Final Empire", "character_freq_data_Mistborn_I.json")
+test.save_general_data("Summary:Mistborn: The Final Empire", "character_freq_data_general_Mistborn_I.json")

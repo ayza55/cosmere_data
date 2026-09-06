@@ -2,12 +2,12 @@ from pathlib import Path
 import json
 import numpy as np
 import matplotlib.pyplot as plt
-from warbreaker_appearance_data_cleanup import WarbreakerAppearanceData
+from appearance_data import AppearanceData
 
 
 
 ################################################################################################
-wb = WarbreakerAppearanceData()
+wb = AppearanceData(Path(__file__).parent / "data_collection_chapter" / "character_freq_data_general_Warbreaker.json")
 character_apps, character_list = wb.character_apps, wb.character_list
 
 ################################################################################################

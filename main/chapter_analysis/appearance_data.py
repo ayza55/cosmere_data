@@ -1,10 +1,10 @@
 from pathlib import Path
 import json
 
-class WarbreakerAppearanceData():
-    path = Path(__file__).parent / "data_collection_chapter" / "character_freq_data_general_Warbreaker.json"
+class AppearanceData():
 
-    def __init__(self):
+    def __init__(self, path):
+        self.path = path
         self.character_apps, self.character_list = self.retrieve_data(self.path)
 
     """

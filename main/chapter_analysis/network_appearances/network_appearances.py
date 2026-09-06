@@ -3,23 +3,27 @@
 # import sys
 # print(sys.path)
 from general_network.network_base import NetworkBase
-from chapter_analysis.warbreaker_appearance_data_cleanup import WarbreakerAppearanceData
+from chapter_analysis.appearance_data import AppearanceData
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 import hvplot.networkx as hv
 import hvplot.pandas
 import panel as pn
+from pathlib import Path
+
+project_root = Path("main")
+file_path = Path("main/chapter_analysis/data_collection_chapter/character_freq_data_general_Mistborn_I.json")
+
+# Get the relative path
+relative_path = file_path.relative_to(project_root)
 
 
-
-
-class WarbreakerAppearanceNetwork(NetworkBase):
-    THRESHOLD = 3
+class AppearanceNetwork(NetworkBase):
 
     def __init__(self):
         super().__init__()
-        wb = WarbreakerAppearanceData()
+        wb = AppearanceData(r"C:\Users\ayzph\PycharmProjects\Cosmere_data\main\chapter_analysis\data_collection_chapter\character_freq_data_general_Mistborn_I.json")
         self.character_apps, self.character_list = wb.character_apps, wb.character_list
         self.links = np.full(((len(self.character_list)), len(self.character_list)), -1)
 
@@ -95,7 +99,7 @@ class WarbreakerAppearanceNetwork(NetworkBase):
         # self.network.show_buttons(filter_ = ['edges', 'renderer'])
         self.show_network(filename)
 
-    def create_network_static(self, filename: str, threshold = 0, pos = None):
+    def create_network_static(self, threshold = 0, pos = None):
         static_network = nx.Graph()
 
     # Add relationships
@@ -125,8 +129,8 @@ class WarbreakerAppearanceNetwork(NetworkBase):
 
 
 ##############################################################################################
-wb_network = WarbreakerAppearanceNetwork()
-start_network, pp = wb_network.create_network_static('warbreaker_appearance_network.html', 1)
+wb_network = AppearanceNetwork()
+start_network, pp = wb_network.create_network_static(1)
 position = nx.spring_layout(start_network, seed=42) # seed ensures reproducibility
 
 # wb_network.create_network('warbreaker_appearance_network.html')
@@ -136,12 +140,12 @@ pn.extension()
 thresh = pn.widgets.DiscreteSlider(label='Discrete Slider', options=[1,2,3,4,5,6,7], value=1)
 
 def generate_netx_plot(threshold):
-    network,_  = wb_network.create_network_static('warbreaker_appearance_network.html', thresh.value, pos = position)
+    network,_  = wb_network.create_network_static(thresh.value, pos = position)
     plot = hv.draw(network, pos=position, node_color='blue', with_labels=False, width=600, height=600,)
     return plot
 
 
 plot = pn.bind(generate_netx_plot, threshold=thresh)
 layout = pn.Column(thresh, plot).servable()
-#layout.show()
-layout.save("interactive_warbreaker_network.html", embed = True)
+layout.show()
+layout.save("interactive_Mistborn_I_network.html", embed = True)
