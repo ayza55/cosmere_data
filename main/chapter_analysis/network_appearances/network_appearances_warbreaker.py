@@ -1,8 +1,15 @@
+# import sys
+# print(sys.executable)
+# import sys
+# print(sys.path)
 from general_network.network_base import NetworkBase
 from chapter_analysis.warbreaker_appearance_data_cleanup import WarbreakerAppearanceData
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
+import hvplot.networkx as hv
+
+
 
 class WarbreakerAppearanceNetwork(NetworkBase):
     THRESHOLD = 3
@@ -119,4 +126,8 @@ nx.draw(
 )
 
 # Display the plot
-plt.show()
+# plt.show()
+
+## Using hvnx
+plot = hv.draw(static_network, pos=pos, node_color='blue', with_labels=False, width=1000, height=1000)
+hv.show(plot)

@@ -12,18 +12,20 @@ character_apps, character_list = wb.character_apps, wb.character_list
 
 ################################################################################################
 # raster plot
-
+maxim = max([sum(character_apps[x]) for x in character_apps.keys()])
 raster_data = []
 for char in character_list:
     raster_data.append(np.array(character_apps[char]))
 
-fig, ax = plt.subplots(figsize=(15, 20))
-ax.eventplot(raster_data, linelengths=0.7, orientation='horizontal', linewidths=10)
-y_pos = [x for x in range(len(raster_data))]
+label_list = [i if sum(character_apps[i]) > maxim//3 else None for i in character_list]
+fig, ax = plt.subplots(figsize=(10, 40))
+y_pos = [4*i for i in range(len(character_list))]
+ax.eventplot(raster_data, linelengths=3.5, orientation='horizontal', linewidths=7, lineoffsets= y_pos)
 ax.set_yticks(y_pos)
-ax.set_yticklabels(character_list)
+ax.set_yticklabels([])
+#ax.set_yticklabels(label_list)
+plt.savefig("Warbreaker_raster_fin.png")
 plt.show()
-# plt.savefig("Warbreaker_raster")
 
 
 

@@ -6,7 +6,7 @@ from pathlib import Path
 
 # get path to the data
 dir_parent = Path(__file__).parent
-file_path_nalthis = dir_parent.parent / "data_collection" / "characters_data.json"
+file_path_nalthis = dir_parent.parent /"group_analysis"/ "data_collection" / "characters_data.json"
 
 # link factors
 LINKS = ["Abilities", "Groups"]
