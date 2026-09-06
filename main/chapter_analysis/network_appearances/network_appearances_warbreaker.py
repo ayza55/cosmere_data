@@ -8,12 +8,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 import hvplot.networkx as hv
+import hvplot.pandas
+import panel as pn
+
 
 
 
 class WarbreakerAppearanceNetwork(NetworkBase):
     THRESHOLD = 3
-
 
     def __init__(self):
         super().__init__()
@@ -55,12 +57,12 @@ class WarbreakerAppearanceNetwork(NetworkBase):
     if dynamic, adds edges to the network held by the instance and returns empty list
     if static, returns the list of strings representing edge pairings.
     """
-    def create_edges(self, dynamic : bool):
+    def create_edges(self, dynamic : bool, threshold = 1):
         static_links = []
         self._parse_links()
         for i in range(self.upper_row_index):
             for j in range(i + 1, self.upper_col_index):
-                if self.links[i,j] >= self.THRESHOLD:
+                if self.links[i,j] >= threshold:
                     if dynamic:
                         self.network.add_edge(self.character_list[i],
                                           self.character_list[j])
@@ -72,9 +74,9 @@ class WarbreakerAppearanceNetwork(NetworkBase):
     """
     Generates network 
     """
-    def create_network(self, filename : str):
+    def create_network_dynamic(self, filename : str, threshold):
         self.add_to_network(self.character_list, None)
-        self.create_edges()
+        self.create_edges(True)
 
         self.network.barnes_hut (
             gravity=-10000,
@@ -93,7 +95,29 @@ class WarbreakerAppearanceNetwork(NetworkBase):
         # self.network.show_buttons(filter_ = ['edges', 'renderer'])
         self.show_network(filename)
 
+    def create_network_static(self, filename: str, threshold = 0, pos = None):
+        static_network = nx.Graph()
 
+    # Add relationships
+        static_network.add_nodes_from(self.character_list)
+        edges = self.create_edges(dynamic=False, threshold = threshold)
+        static_network.add_edges_from(edges)
+
+        # Compute a layout to position the nodes
+        if not pos:
+            pos = nx.spring_layout(static_network)
+
+        # Render the layout using Matplotlib
+        plt.figure(figsize=(10, 10))
+        nx.draw(
+            static_network,
+            pos,
+            with_labels=True,
+            node_color="lightblue",
+            edge_color="gray",
+            node_size=200,
+        )
+        return (static_network, pos)
 
 
 
@@ -102,32 +126,22 @@ class WarbreakerAppearanceNetwork(NetworkBase):
 
 ##############################################################################################
 wb_network = WarbreakerAppearanceNetwork()
+start_network, pp = wb_network.create_network_static('warbreaker_appearance_network.html', 1)
+position = nx.spring_layout(start_network, seed=42) # seed ensures reproducibility
+
 # wb_network.create_network('warbreaker_appearance_network.html')
 
-# Initialize an undirected graph
-static_network = nx.Graph()
-
-# Add relationships (edges automatically create missing nodes)
-edges = wb_network.create_edges(dynamic=False)
-static_network.add_edges_from(edges)
-
-# Compute a layout to position the nodes
-pos = nx.spring_layout(static_network)
-
-# Render the layout using Matplotlib
-plt.figure(figsize=(10, 10))
-nx.draw(
-    static_network,
-    pos,
-    with_labels=True,
-    node_color="lightblue",
-    edge_color="gray",
-    node_size=200,
-)
-
-# Display the plot
-# plt.show()
-
+pn.extension()
 ## Using hvnx
-plot = hv.draw(static_network, pos=pos, node_color='blue', with_labels=False, width=1000, height=1000)
-hv.show(plot)
+thresh = pn.widgets.DiscreteSlider(label='Discrete Slider', options=[1,2,3,4,5,6,7], value=1)
+
+def generate_netx_plot(threshold):
+    network,_  = wb_network.create_network_static('warbreaker_appearance_network.html', thresh.value, pos = position)
+    plot = hv.draw(network, pos=position, node_color='blue', with_labels=False, width=600, height=600,)
+    return plot
+
+
+plot = pn.bind(generate_netx_plot, threshold=thresh)
+layout = pn.Column(thresh, plot).servable()
+#layout.show()
+layout.save("interactive_warbreaker_network.html", embed = True)
